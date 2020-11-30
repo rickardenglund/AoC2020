@@ -1,15 +1,19 @@
-.PHONY: day
+.PHONY: gen_day run source
 
-DAY_OF_MONTH ?= `date +%d`
+DAY ?= `date +%d`
 
 venv:
 	python3 -m venv venv
 
+#source: venv
+#	source venv/bin/activate
 
-day:
-	@install -d days/${DAY_OF_MONTH}
-	@rm -rf days/${DAY_OF_MONTH}/*
-	@cp -r days/template/* days/${DAY_OF_MONTH}/
-	@sed -i '' "s/day XX/day ${DAY_OF_MONTH}/g" days/${DAY_OF_MONTH}/day.py
-	@echo "generated day: ${DAY_OF_MONTH}"
+gen_day:
+	@install -d days/${DAY}
+	@rm -rf days/${DAY}/*
+	@cp -r days/template/* days/${DAY}/
+	@sed -i '' "s/day XX/day ${DAY}/g" days/${DAY}/day.py
+	@echo "generated day: ${DAY}"
 
+run:
+	cd days/${DAY} && python day.py
