@@ -1,4 +1,5 @@
 def main():
+    print('### day XX ###')
     print('p1:', part1())
     print('p2:', part2())
 
