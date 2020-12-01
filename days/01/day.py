@@ -1,3 +1,7 @@
+import itertools
+import functools
+
+
 def main():
     print('### day 01 ###')
 
@@ -9,34 +13,29 @@ TARGET = 2020
 
 
 def part1():
-    f = open("input.txt", "r")
-    contents = f.readlines()
-    f.close()
-
-    contents = list(map(lambda x : int(x), contents))
-
-    for i in contents:
-        for j in contents:
-            if i + j == TARGET:
-                return i * j
-
-    raise Exception('No answer')
+    numbers = get_numbers()
+    return get_combo(numbers, 2, TARGET)
 
 
 def part2():
+    numbers = get_numbers()
+    return get_combo(numbers, 3, TARGET)
+
+
+def get_numbers():
     f = open("input.txt", "r")
     contents = f.readlines()
     f.close()
 
-    contents = list(map(lambda x : int(x), contents))
+    return list(map(lambda x: int(x), contents))
 
-    for i in contents:
-        for j in contents:
-            for k in contents:
-                if i + j + k == TARGET:
-                    return i * j * k
 
-    raise Exception('No answer')
+def get_combo(numbers, n, target):
+    for values in itertools.combinations(numbers, n):
+        if sum(values) == target:
+            return functools.reduce(lambda a, b: a * b, values, 1)
+
+    raise Exception('no combo found')
 
 
 if __name__ == "__main__":
