@@ -16,7 +16,7 @@ gen_day:
 	@echo "generated day: ${DAY}"
 
 run:
-	cd days/${DAY} && python day.py
+	python days/${DAY}/day.py
 
 test:
 	@scripts/test.sh
