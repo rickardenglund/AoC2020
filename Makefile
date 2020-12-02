@@ -1,4 +1,4 @@
-.PHONY: gen_day run source
+.PHONY: gen_day run source test
 
 DAY ?= `date +%d`
 
@@ -17,3 +17,7 @@ gen_day:
 
 run:
 	cd days/${DAY} && python day.py
+
+
+test:
+	@./test.sh

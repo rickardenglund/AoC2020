@@ -1,5 +1,6 @@
 from unittest import TestCase
-from day import part1, part2
+import unittest
+from dayx import part1, part2
 
 
 class Test(TestCase):
@@ -8,3 +9,8 @@ class Test(TestCase):
 
     def test_part2(self):
         self.assertEqual(2, part2())
+
+
+
+if __name__ == '__main__':
+    unittest.main()

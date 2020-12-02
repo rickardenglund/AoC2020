@@ -1,4 +1,5 @@
 from unittest import TestCase
+import unittest
 from day import part1, part2, valid
 
 
@@ -11,3 +12,7 @@ class Test(TestCase):
         self.assertTrue(valid('asdf', 1, 3, 'a'))
         self.assertFalse(valid('asdf', 1, 3, 'b'))
         self.assertFalse(valid('asaaaadf', 1, 3, 'a'))
+
+
+if __name__ == '__main__':
+    unittest.main()
