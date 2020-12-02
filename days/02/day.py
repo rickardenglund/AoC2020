@@ -1,4 +1,4 @@
-import functools
+import re
 
 
 def main():
@@ -10,32 +10,22 @@ def main():
 def part1():
     n_valid = 0
     input = get_input()
-    for (letter, limits, password) in input:
-        if valid(password, int(limits[0]), int(limits[1]), letter):
+    for (letter, min, max, password) in input:
+        if valid(password, min, max, letter):
             n_valid += 1
 
     return n_valid
 
 
 def valid(password, min, max, letter):
-    counts = functools.reduce(count_letter, password, {})
-    count = counts.get(letter, 0)
-
-    return min <= count <= max
-
-
-def count_letter(agg, letter):
-    new_count = agg.get(letter, 0) + 1
-    agg[letter] = new_count
-
-    return agg
+    return min <= password.count(letter) <= max
 
 
 def part2():
     n_valid = 0
     input = get_input()
-    for (letter, limits, password) in input:
-        if valid2(password, int(limits[0]), int(limits[1]), letter):
+    for (letter, min, max, password) in input:
+        if valid2(password, min, max, letter):
             n_valid += 1
 
     return n_valid
@@ -53,17 +43,16 @@ def valid2(password, first_i, second_i, letter):
 
 def get_input():
     f = open("input.txt", "r")
-    contents = f.readlines()
+    contents = f.read()
     f.close()
 
-    passwords = []
-    for line in contents:
-        line = line.split()
-        limits = line[0].split('-')
-        letter = line[1][0]
-        password = line[2]
+    pattern = re.compile(r'(\d+)-(\d+) (\w): (\w*)\n')
+    matches = pattern.findall(contents)
 
-        passwords.append((letter, limits, password))
+    passwords = []
+    for (min, max, letter, password) in matches:
+        passwords.append((letter, int(min), int(max), password))
+
     return passwords
 
 
