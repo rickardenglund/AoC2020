@@ -1,4 +1,5 @@
 import re
+import puzzle
 
 
 def main():
@@ -42,12 +43,8 @@ def valid2(password, first_i, second_i, letter):
 
 
 def get_input():
-    f = open("input.txt", "r")
-    contents = f.read()
-    f.close()
-
     pattern = re.compile(r'(\d+)-(\d+) (\w): (\w*)\n')
-    matches = pattern.findall(contents)
+    matches = pattern.findall(puzzle.input)
 
     passwords = []
     for (min, max, letter, password) in matches:

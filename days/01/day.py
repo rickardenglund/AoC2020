@@ -1,5 +1,7 @@
 import itertools
 import functools
+import puzzle
+import re
 
 
 def main():
@@ -23,11 +25,17 @@ def part2():
 
 
 def get_numbers():
-    f = open("input.txt", "r")
-    contents = f.readlines()
-    f.close()
+    pattern = re.compile(r'(\d+)\n')
+    matches = pattern.findall(puzzle.input)
 
-    return list(map(lambda x: int(x), contents))
+    return list(
+        map(mod_input, matches)
+    )
+
+
+def mod_input(match):
+    w1 = match
+    return int(w1)
 
 
 def get_combo(numbers, n, target):

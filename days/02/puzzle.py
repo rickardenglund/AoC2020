@@ -1,4 +1,4 @@
-8-9 x: xxxxxxxrk
+input = '''8-9 x: xxxxxxxrk
 5-8 f: fxffmfff
 2-5 c: ccspwpc
 1-4 g: gggg
@@ -998,3 +998,4 @@
 5-10 w: zzcwwwwwwkwwwqws
 1-7 c: ccrmhdchwbr
 7-11 g: xzgnggggrggrg
+'''

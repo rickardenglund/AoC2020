@@ -1,4 +1,5 @@
 import re
+import puzzle
 
 
 def main():
@@ -20,12 +21,8 @@ def part2():
 
 
 def get_input():
-    f = open("input.txt", "r")
-    contents = f.read()
-    f.close()
-
     pattern = re.compile(r'(\w+) (\w+)')
-    matches = pattern.findall(contents)
+    matches = pattern.findall(puzzle.input)
 
     return list(
         map(mod_input, matches)
