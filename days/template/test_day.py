@@ -7,4 +7,4 @@ class Test(TestCase):
         self.assertEqual(2, part1())
 
     def test_part2(self):
-        self.assertEqual(-2, part2())
+        self.assertEqual(2, part2())
