@@ -18,5 +18,9 @@ gen_day:
 run:
 	python days/${DAY}/day.py
 
-test:
-	@scripts/test.sh
+test: days/*/test_day.py
+	@set -e && \
+	for testfile in $^ ; do \
+		python $$testfile ; \
+	done
+
