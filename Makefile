@@ -18,6 +18,5 @@ gen_day:
 run:
 	cd days/${DAY} && python day.py
 
-
 test:
 	@./test.sh
