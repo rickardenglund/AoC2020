@@ -1,4 +1,4 @@
-name: AoC 2020
+name: Python package
 
 on: [push]
 
