@@ -9,35 +9,38 @@ def main():
 
 
 def part1():
-    lines = puzzle.input.split('\n')
+    map = puzzle.input.split('\n')
+    x_step = 3
+    y_step = 1
 
-    cur_x = 0
-    n_trees =0
-    for y in range(len(lines)):
-        if lines[y][cur_x] == '#':
-            n_trees += 1
-        cur_x = (cur_x + 3) % len(lines[y])
+    n_trees = count_slope(map, x_step, y_step)
 
     return n_trees
 
 
 def part2():
-    lines = puzzle.input.split('\n')
-    slopes = [(1,1),(3,1),(5,1),(7,1),(1,2)]
+    map = puzzle.input.split('\n')
+    slopes = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
 
     product = 1
     for (x_step, y_step) in slopes:
-        cur_x = 0
-        cur_y = 0
-        n_trees =0
-        while cur_y < len(lines):
-            if lines[cur_y][cur_x] == '#':
-                n_trees += 1
-            cur_x = (cur_x + 3) % len(lines[cur_y])
-            cur_y += y_step
-        product *= n_trees
+        product *= count_slope(map, x_step, y_step)
 
     return product
+
+
+def count_slope(map, x_step, y_step):
+    # print('slope', x_step, y_step)
+    cur_x = 0
+    cur_y = 0
+    n_trees = 0
+    while cur_y < len(map):
+        # print('pos:', cur_x, cur_y)
+        if map[cur_y][cur_x] == '#':
+            n_trees += 1
+        cur_x = (cur_x + x_step) % len(map[cur_y])
+        cur_y += y_step
+    return n_trees
 
 
 if __name__ == "__main__":
