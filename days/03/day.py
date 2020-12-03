@@ -30,12 +30,10 @@ def part2():
 
 
 def count_slope(map, x_step, y_step):
-    # print('slope', x_step, y_step)
     cur_x = 0
     cur_y = 0
     n_trees = 0
     while cur_y < len(map):
-        # print('pos:', cur_x, cur_y)
         if map[cur_y][cur_x] == '#':
             n_trees += 1
         cur_x = (cur_x + x_step) % len(map[cur_y])
