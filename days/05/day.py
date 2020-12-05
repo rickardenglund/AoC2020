@@ -13,19 +13,26 @@ def main():
 
 def part1():
     seats = get_input()
-    seat_ids = list(map(lambda seat: seat[0] * ID_MULTIPLIER + seat[1], seats))
+    seat_ids = to_seat_ids(seats)
 
     return max(seat_ids)
 
 
 def part2():
     seats = get_input()
-    seat_ids = list(map(lambda seat: seat[0] * ID_MULTIPLIER + seat[1], seats))
+    seat_ids = to_seat_ids(seats)
     seat_ids.sort()
 
     for i in range(len(seat_ids)):
         if seat_ids[i + 1] == seat_ids[i] + 2:
             return seat_ids[i] + 1
+
+
+def to_seat_ids(seats):
+    seat_ids = []
+    for (row, col) in seats:
+        seat_ids.append(row * ID_MULTIPLIER + col)
+    return seat_ids
 
 
 def get_input():
