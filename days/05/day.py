@@ -11,14 +11,14 @@ def main():
     print('p2:', part2())
 
 
-def part1():
+def part1() -> int:
     seats = get_input()
     seat_ids = to_seat_ids(seats)
 
     return max(seat_ids)
 
 
-def part2():
+def part2() -> int:
     seats = get_input()
     seat_ids = to_seat_ids(seats)
     seat_ids.sort()
@@ -28,14 +28,14 @@ def part2():
             return seat_ids[i] + 1
 
 
-def to_seat_ids(seats):
+def to_seat_ids(seats: list[(int, int)]) -> list[int]:
     seat_ids = []
     for (row, col) in seats:
         seat_ids.append(row * ID_MULTIPLIER + col)
     return seat_ids
 
 
-def get_input():
+def get_input() -> list[(int, int)]:
     seat_partitioning = puzzle.input.split('\n')
 
     return list(
@@ -43,7 +43,7 @@ def get_input():
     )
 
 
-def parse(space_partitioning):
+def parse(space_partitioning: str) -> (int, int):
     row_str = space_partitioning[0:7]
     col_str = space_partitioning[7:]
 

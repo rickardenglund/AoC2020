@@ -34,6 +34,5 @@ def mod_input(match):
     return w2, w1
 
 
-
 if __name__ == "__main__":
     main()
