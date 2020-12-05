@@ -12,12 +12,11 @@ def part1():
     passports = get_input()
     print('n_passports', len(passports))
 
-    n_valid = 0
-    for key in passports:
-        if valid(passports[key]):
-            n_valid += 1
-
-    return n_valid
+    return len(
+        list(
+            filter(lambda key: valid(passports[key]), passports)
+        )
+    )
 
 
 def valid(p):
