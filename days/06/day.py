@@ -1,7 +1,4 @@
 import puzzle
-import re
-from typing import Dict, List, Any
-from functools import reduce
 
 
 def main():
@@ -63,10 +60,6 @@ def count_all(n_members: int, answers: dict[str, int]) -> int:
         if answers[answer] == n_members:
             total += 1
     return total
-
-
-def get_input() -> list[set[str]]:
-    return groups
 
 
 if __name__ == "__main__":
