@@ -16,9 +16,9 @@ def part1():
         if line == '':
             groups.append(cur_group)
             cur_group = set()
-
-        for yes_answer in line:
-            cur_group.add(yes_answer)
+        else:
+            for yes_answer in line:
+                cur_group.add(yes_answer)
 
     total = 0
     for group in groups:
@@ -38,17 +38,15 @@ def part2():
             groups.append((cur_group_size, cur_group))
             cur_group = {}
             cur_group_size = 0
-            continue
+        else:
+            for yes_answer in line:
+                cur_group[yes_answer] = cur_group.get(yes_answer, 0) + 1
 
-        for yes_answer in line:
-            cur_group[yes_answer] = cur_group.get(yes_answer, 0) + 1
-
-        cur_group_size += 1
+            cur_group_size += 1
 
     total = 0
     for n_members, answers in groups:
         all_yes = count_all(n_members, answers)
-        # print(n_members, answers, all_yes)
         total += all_yes
 
     return total
