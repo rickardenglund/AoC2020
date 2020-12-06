@@ -1,4 +1,6 @@
 import puzzle
+import string
+from functools import reduce
 
 
 def main():
@@ -8,56 +10,26 @@ def main():
 
 
 def part1():
-    lines = puzzle.input.split('\n')
+    groups = [group.split('\n') for group in puzzle.input.split('\n\n')]
 
-    groups = []
-    cur_group = set()
-    for line in lines:
-        if line == '':
-            groups.append(cur_group)
-            cur_group = set()
-        else:
-            for yes_answer in line:
-                cur_group.add(yes_answer)
+    answers_per_group = [
+        reduce(lambda agg, member_answers: agg.union(member_answers), group, set())
+        for group in groups
+    ]
 
-    total = 0
-    for group in groups:
-        total += len(group)
-
-    return total
+    return sum([len(group_answers) for group_answers in answers_per_group])
 
 
 def part2():
-    lines = puzzle.input.split('\n')
+    groups = [group.split('\n') for group in puzzle.input.split('\n\n')]
 
-    groups: list[tuple[int, dict[str, int]]] = []
-    cur_group: dict[str, int] = {}
-    cur_group_size = 0
-    for line in lines:
-        if line == '':
-            groups.append((cur_group_size, cur_group))
-            cur_group = {}
-            cur_group_size = 0
-        else:
-            for yes_answer in line:
-                cur_group[yes_answer] = cur_group.get(yes_answer, 0) + 1
+    common_answers_per_group = [
+        reduce(lambda agg, member_answers: agg.intersection(member_answers), group, set(string.ascii_lowercase))
+        for group in groups
+    ]
 
-            cur_group_size += 1
+    return sum([len(group_answers) for group_answers in common_answers_per_group])
 
-    total = 0
-    for n_members, answers in groups:
-        all_yes = count_all(n_members, answers)
-        total += all_yes
-
-    return total
-
-
-def count_all(n_members: int, answers: dict[str, int]) -> int:
-    total = 0
-    for answer in answers:
-        if answers[answer] == n_members:
-            total += 1
-    return total
 
 
 if __name__ == "__main__":
