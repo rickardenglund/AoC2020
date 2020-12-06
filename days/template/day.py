@@ -1,12 +1,21 @@
 import re
 import puzzle
+from datetime import datetime
 
 
 def main():
     print('### day XX ###')
-    print('p1:', part1())
-    print('p2:', part2())
+    start1 = datetime.now()
+    p1res = part1()
+    stop1 = datetime.now()
+    print(f'p1: {p1res}')
 
+    start2 = datetime.now()
+    p2res = part2()
+    stop2 = datetime.now()
+    print(f'p2: {p2res}')
+
+    print(f'p1 took: {stop1 - start1}\np2 took: {stop2 - start2}')
 
 def part1():
     inputs = get_input()
