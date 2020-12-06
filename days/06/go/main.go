@@ -65,14 +65,14 @@ func part2(input string) int {
 }
 
 func intersect(group map[int32]bool, personString string) map[int32]bool {
-	newDict := make(map[int32]bool)
+	res := make(map[int32]bool)
 	for _, answer := range personString {
 		if group[answer] {
-			newDict[answer] = true
+			res[answer] = true
 		}
 	}
 
-	return newDict
+	return res
 }
 
 var testInput = `abc
