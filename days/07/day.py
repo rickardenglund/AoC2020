@@ -37,13 +37,20 @@ def contains(tree, key, target):
         return any([contains(tree, color, target) for (n, color) in tree[key]])
 
 
-
-
-
 def part2():
-    inputs = get_input()
+    tree = get_input()
 
-    return len(inputs)
+    return count(tree, 'shiny gold', 0) - 1
+
+
+def count(tree, key, n):
+    if len(tree[key]) == 0:
+        return n + 1
+    else:
+        childs = [count(tree, color, n)*n_in_color for (n_in_color, color) in tree[key]]
+        # c = [(color, count(tree, color, n)*n_in_color) for (n_in_color, color) in tree[key]]
+        # print(key, c)
+        return sum(childs) + 1
 
 
 def get_input():
