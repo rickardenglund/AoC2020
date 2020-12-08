@@ -17,6 +17,7 @@ def main():
 
     print(f'p1 took: {stop1 - start1}\np2 took: {stop2 - start2}')
 
+
 def part1():
     inputs = get_input()
 

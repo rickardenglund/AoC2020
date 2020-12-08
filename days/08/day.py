@@ -6,17 +6,11 @@ from enum import Enum
 
 def main():
     print('### day 08 ###')
-    start1 = datetime.now()
     p1res = part1()
-    stop1 = datetime.now()
     print(f'p1: {p1res}')
 
-    start2 = datetime.now()
     p2res = part2()
-    stop2 = datetime.now()
     print(f'p2: {p2res}')
-
-    print(f'p1 took: {stop1 - start1}\np2 took: {stop2 - start2}')
 
 
 def part1():
@@ -30,13 +24,14 @@ class State(Enum):
     LOOP = 1
 
 
-def run_program(program):
+def run_program(program) -> tuple[State,int]:
     visited = set()
     ip = 0
     acc = 0
-    while not ip in visited:
+    while ip not in visited:
         if ip >= len(program):
             return (State.COMPLETED, acc)
+
         visited.add(ip)
         if program[ip][0] == 'acc':
             acc += program[ip][1]
