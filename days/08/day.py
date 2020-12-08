@@ -24,7 +24,7 @@ class State(Enum):
     LOOP = 1
 
 
-def run_program(program) -> tuple[State,int]:
+def run_program(program) -> tuple[State, int]:
     visited = set()
     ip = 0
     acc = 0
