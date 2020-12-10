@@ -22,20 +22,40 @@ def main():
 def part1():
     outputs = get_input(puzzle.input)
 
-    diffs = {1: 0, 2: 0, 3: 0}
+    joltage_diffs = {1: 0, 2: 0, 3: 0}
     for i in range(len(outputs) - 1):
-        diffs[outputs[i + 1] - outputs[i]] += 1
+        joltage_diffs[outputs[i + 1] - outputs[i]] += 1
 
-    return diffs[1] * diffs[3]
+    return joltage_diffs[1] * joltage_diffs[3]
 
 
 def part2():
     outputs = get_input(puzzle.input)
 
-    return count(outputs, 0)
+    return count_possible_configurations(outputs, 0)
 
 
-def get_steps(outputs, index):
+def count_possible_configurations(outputs, cur):
+    memo = {len(outputs) - 1: 1}
+    return count_rec(outputs, cur, memo)
+
+
+def count_rec(outputs, current_i, memo: dict[int, int]):
+    if current_i in memo.keys():
+        return memo[current_i]
+
+    if current_i == len(outputs) - 1:
+        return 1
+
+    res = 0
+    for step in get_possible_next_adapters(outputs, current_i):
+        res += count_rec(outputs, current_i + step, memo)
+
+    memo[current_i] = res
+    return res
+
+
+def get_possible_next_adapters(outputs, index):
     v = outputs[index]
     res = []
     for i in range(1, 4):
@@ -44,23 +64,6 @@ def get_steps(outputs, index):
         diff = outputs[index + i] - v
         if diff <= 3:
             res.append(i)
-    return res
-
-
-def count(outputs, cur):
-    memo = {len(outputs) - 1: 1}
-    return count_rec(outputs, cur, memo)
-
-
-def count_rec(outputs, cur, memo:dict[int,int]):
-    if cur in memo.keys():
-        return memo[cur]
-
-    res = 0
-    for step in get_steps(outputs, cur):
-        res += count_rec(outputs, cur + step, memo)
-
-    memo[cur] = res
     return res
 
 
