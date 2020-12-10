@@ -16,9 +16,9 @@ class Test(TestCase):
         self.assertEqual(get_possible_next_adapters([0, 1, 2, 3, 6], 2), [1])
 
     def test_count(self):
-        self.assertEqual(1, count_possible_configurations([0, 1, 2, 3], 3))
-        self.assertEqual(1, count_possible_configurations([0, 1, 2, 3], 2))
-        self.assertEqual(2, count_possible_configurations([0, 1, 2, 3], 1))
+        self.assertEqual(1, count_possible_configurations((0, 1, 2, 3), 3))
+        self.assertEqual(1, count_possible_configurations((0, 1, 2, 3), 2))
+        self.assertEqual(2, count_possible_configurations((0, 1, 2, 3), 1))
         smalltest = get_input(puzzle.small)
         self.assertEqual(8, count_possible_configurations(smalltest, 0))
 

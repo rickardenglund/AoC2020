@@ -1,7 +1,7 @@
 import re
 import puzzle
 from datetime import datetime
-from itertools import permutations
+from functools import cache
 
 
 def main():
@@ -36,23 +36,17 @@ def part2():
 
 
 def count_possible_configurations(outputs, cur):
-    memo = {len(outputs) - 1: 1}
-    return count_rec(outputs, cur, memo)
+    return count_rec(outputs, cur)
 
 
-def count_rec(outputs, current_i, memo: dict[int, int]):
-    if current_i in memo.keys():
-        return memo[current_i]
-
+@cache
+def count_rec(outputs: tuple[int], current_i:int) -> int:
     if current_i == len(outputs) - 1:
         return 1
 
-    res = 0
-    for step in get_possible_next_adapters(outputs, current_i):
-        res += count_rec(outputs, current_i + step, memo)
-
-    memo[current_i] = res
-    return res
+    return sum(
+        [count_rec(outputs, current_i + step) for step in get_possible_next_adapters(outputs, current_i)]
+    )
 
 
 def get_possible_next_adapters(outputs, index):
@@ -72,7 +66,7 @@ def get_input(input):
     outputs.sort()
     outputs.append(outputs[len(outputs) - 1] + 3)
     outputs.insert(0, 0)
-    return outputs
+    return tuple(outputs)
 
 
 if __name__ == "__main__":
