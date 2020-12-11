@@ -5,17 +5,17 @@ from datetime import datetime
 
 def main():
     print('### day 11 ###')
-    # start1 = datetime.now()
-    # p1res = part1()
-    # stop1 = datetime.now()
-    # print(f'p1: {p1res}')
+    start1 = datetime.now()
+    p1res = part1()
+    stop1 = datetime.now()
+    print(f'p1: {p1res}')
 
     start2 = datetime.now()
     p2res = part2()
     stop2 = datetime.now()
     print(f'p2: {p2res}')
 
-    print(f'p2 took: {stop2 - start2}')
+    print(f'p1 took {stop1 - start1} p2 took: {stop2 - start2}')
 
 
 def part1():
