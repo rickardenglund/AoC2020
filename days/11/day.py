@@ -1,4 +1,3 @@
-import re
 import puzzle
 from datetime import datetime
 
@@ -104,9 +103,11 @@ def count_distant_neighbours(state, x, y) -> dict[str, int]:
 
 
 def find_distant_seat(state, x, y, dx, dy):
+    width = len(state[0])
+    height = len(state)
     cur_x = x + dx
     cur_y = y + dy
-    while 0 <= cur_y < len(state) and 0 <= cur_x < len(state[0]):
+    while 0 <= cur_y < height and 0 <= cur_x < width:
         if state[cur_y][cur_x] in [OCCUPIED, EMPTY]:
             return state[cur_y][cur_x]
 
