@@ -13,6 +13,8 @@ gen_day:
 	@rm -rf days/${DAY}/*
 	@cp -r days/template/* days/${DAY}/
 	@sed -i '' "s/day XX/day ${DAY}/g" days/${DAY}/day.py
+	@python util/get_puzzle.py ${DAY} days/${DAY}/puzzle.py
+
 	@echo "generated day: ${DAY}"
 
 run:
