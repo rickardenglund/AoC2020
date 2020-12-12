@@ -9,8 +9,15 @@ def main():
     parser.add_argument("output_file", help="file to output the input", type=argparse.FileType('w'))
     args = parser.parse_args()
 
-    f = open(os.path.join(os.getenv("HOME"), '.aoc/session_id'))
-    session_id = f.read().strip()
+    session_id = ""
+    try:
+        f = open(os.path.join(os.getenv("HOME"), '.aoc/session_id'))
+        session_id = f.read().strip()
+    except IOError:
+        print('You are not logged in')
+        exit(-1)
+    finally:
+        f.close()
 
     r = requests.get(f"https://adventofcode.com/2020/day/{args.day}/input", headers={"Cookie": "session=" + session_id})
     if r.status_code != 200:
