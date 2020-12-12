@@ -1,4 +1,5 @@
 from unittest import TestCase
+import unittest
 from ship2 import Ship2
 
 
@@ -18,3 +19,7 @@ class TestShip2(TestCase):
         ship.action('R', 90)
         self.assertAlmostEqual(1, ship.waypoint_x)
         self.assertAlmostEqual(-10, ship.waypoint_y)
+
+
+if __name__ == '__main__':
+    unittest.main()

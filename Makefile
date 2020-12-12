@@ -18,9 +18,10 @@ gen_day:
 run:
 	python days/${DAY}/day.py
 
-test: days/*/test_day.py
+test: days/*/test_*.py
 	@set -e && \
 	for testfile in $^ ; do \
+	  	echo $$testfile ; \
 		python $$testfile ; \
 	done
 

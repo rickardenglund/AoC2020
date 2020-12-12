@@ -31,8 +31,7 @@ L.L.L..L..
 #LLLLLLLL#
 #.LLLLLL.L
 #.#LLLL.##''')
-        print(after)
-        print(next_round(before, count_immediate_neighbours,
+        self.assertEqual(after, next_round(before, count_immediate_neighbours,
                          lambda current, neighbours: spot_outcome(current, neighbours, 4)))
 
 
