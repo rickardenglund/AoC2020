@@ -14,6 +14,7 @@ gen_day:
 	@cp -r days/template/* days/${DAY}/
 	@sed -i '' "s/day XX/day ${DAY}/g" days/${DAY}/day.py
 	@python util/get_puzzle.py ${DAY} days/${DAY}/puzzle.py
+	@git add days/${days}
 
 	@echo "generated day: ${DAY}"
 
