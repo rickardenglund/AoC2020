@@ -2,17 +2,11 @@
 
 DAY ?= `date +%d`
 
-venv:
-	python3 -m venv venv
-
-#source: venv
-#	source venv/bin/activate
-
 gen_day:
 	@install -d days/${DAY}
 	@rm -rf days/${DAY}/*
 	@cp -r days/template/* days/${DAY}/
-	@sed -i '' "s/day XX/day ${DAY}/g" days/${DAY}/day.py
+	@sed -i "s/day XX/day ${DAY}/g" days/${DAY}/day.py
 	@python util/get_puzzle.py ${DAY} days/${DAY}/puzzle.py
 	@git add days/${days}
 
@@ -28,3 +22,14 @@ test: days/*/test_*.py
 		python $$testfile ; \
 	done
 
+venv:
+	python3 -m venv venv
+
+#source: venv
+#	source venv/bin/activate
+
+pip_freeze:
+	pip freeze > requirements.txt
+
+pip_install:
+	pip install -r requirements.txt
