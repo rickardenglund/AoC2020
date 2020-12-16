@@ -46,7 +46,7 @@ class Rule():
 
 
 def part1(input: str) -> int:
-    class_rules, nearby_tickets,my_ticket = get_input(input)
+    class_rules, nearby_tickets, my_ticket = get_input(input)
 
     error_rate = 0
     for ticket in nearby_tickets:
@@ -63,9 +63,9 @@ def matches_any(rules: dict[str, Rule], v: int) -> bool:
             return True
     return False
 
-#guess 37050
+
 def part2(input: str) -> int:
-    class_rules, nearby_tickets,my_ticket = get_input(input)
+    class_rules, nearby_tickets, my_ticket = get_input(input)
     valid_tickets = []
     for ticket in nearby_tickets:
         if match(class_rules, ticket):
@@ -98,7 +98,7 @@ def part2(input: str) -> int:
 
     product = 1
     for key in solved_rules:
-        name:str = solved_rules[key].name
+        name: str = solved_rules[key].name
         pos = solved_rules[key].possible_positions[0]
         if name.startswith('departure'):
             product *= my_ticket[pos]
