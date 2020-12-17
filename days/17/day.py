@@ -19,18 +19,23 @@ def main(input):
     print(f'p1 took: {stop1 - start1}\np2 took: {stop2 - start2}')
 
 
-def count_active_neighbours(active_cubes, cube, n_dimensions):
-    count = 0
-    for neighbour in neighbour_list(cube, n_dimensions):
-        if neighbour in active_cubes and cube != neighbour:
-            count += 1
-    return count
+def part1(input: str) -> int:
+    n_dimensions = 3
+    return boot_sequence(input, n_dimensions)
 
 
-def count_me_and_active_neighbours(counts, active_cubes, me, n_dimensions):
-    for cube in neighbour_list(me, n_dimensions):
-        counts[cube] = count_active_neighbours(active_cubes, cube)
-    return counts
+def part2(input: str) -> int:
+    n_dimensions = 4
+    return boot_sequence(input, n_dimensions)
+
+
+def boot_sequence(input: str, n_dimensions: int) -> int:
+    active_cubes = get_input(input, n_dimensions)
+
+    for i in range(6):
+        active_cubes = cycle(active_cubes, n_dimensions)
+
+    return len(active_cubes)
 
 
 def cycle(active_cubes, n_dimensions: int):
@@ -38,9 +43,9 @@ def cycle(active_cubes, n_dimensions: int):
     counts = {}
 
     for active_cube in active_cubes:
-        neighbours = neighbour_list(active_cube, n_dimensions)
-        for neighbour in neighbours:
-            counts[neighbour] = count_active_neighbours(active_cubes, neighbour, n_dimensions)
+        neighbours = neighbour_iterator(active_cube, n_dimensions)
+        for cube in neighbours:
+            counts[cube] = count_active_neighbours(active_cubes, cube, n_dimensions)
 
     for cube in counts:
         if cube in active_cubes:
@@ -52,24 +57,18 @@ def cycle(active_cubes, n_dimensions: int):
     return new_active_cubes
 
 
-def part1(input: str) -> int:
-    n_dimensions = 3
-    active_cubes = get_input(input, n_dimensions)
-
-    for i in range(6):
-        active_cubes = cycle(active_cubes, n_dimensions)
-
-    return len(active_cubes)
+def count_me_and_active_neighbours(counts, active_cubes, me, n_dimensions):
+    for cube in neighbour_iterator(me, n_dimensions):
+        counts[cube] = count_active_neighbours(active_cubes, cube)
+    return counts
 
 
-def part2(input: str) -> int:
-    n_dimensions = 4
-    active_cubes = get_input(input, n_dimensions)
-
-    for i in range(6):
-        active_cubes = cycle(active_cubes, n_dimensions)
-
-    return len(active_cubes)
+def count_active_neighbours(active_cubes, cube, n_dimensions):
+    count = 0
+    for neighbour in neighbour_iterator(cube, n_dimensions):
+        if neighbour in active_cubes and cube != neighbour:
+            count += 1
+    return count
 
 
 def get_input(input: str, n_dimensions: int):
@@ -86,13 +85,11 @@ def get_input(input: str, n_dimensions: int):
     return active_cells
 
 
-def neighbour_list(pos, n_dimensions):
-    neighbours = []
-    for delta in [deltas for deltas in itertools.product(range(-1, 2), repeat=n_dimensions)]:
-        neighbours.append(tuple([sum(vs) for vs in zip(delta, pos)]))
-    return neighbours
+def neighbour_iterator(pos, n_dimensions):
+    return (
+        tuple([sum(vs) for vs in zip(delta, pos)])
+        for delta in (deltas for deltas in itertools.product(range(-1, 2), repeat=n_dimensions)))
 
 
 if __name__ == "__main__":
     main(puzzle.input)
-    # print(neighbour_list((0, 0), 2))
