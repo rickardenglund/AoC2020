@@ -18,7 +18,7 @@ def main(input):
     print(f'p1 took: {stop1 - start1}\np2 took: {stop2 - start2}')
 
 
-def count_active_neightbours(active_cubes: set[tuple[int, int, int]], active_cube: tuple[int, int, int]) -> int:
+def count_active_neighbours(active_cubes, active_cube):
     (x, y, z, w) = active_cube
     n_neighbours = 0
     for dw in range(-1, 2):
@@ -28,38 +28,39 @@ def count_active_neightbours(active_cubes: set[tuple[int, int, int]], active_cub
                     if 0 == dx == dy == dz == dw:
                         continue
 
-                    neightbour = (x + dx, y + dy, z + dz, w + dw)
-                    if neightbour in active_cubes:
+                    neighbour = (x + dx, y + dy, z + dz, w + dw)
+                    if neighbour in active_cubes:
                         n_neighbours += 1
 
     return n_neighbours
 
 
-def count_me_and_active_neightbours(active_cubes, me):
-    counts = {}
+def count_me_and_active_neightbours(counts, active_cubes, me):
     (x, y, z, w) = me
     for dw in range(-1, 2):
         for dz in range(-1, 2):
             for dy in range(-1, 2):
                 for dx in range(-1, 2):
                     cube = (x + dx, y + dy, z + dz, w + dw)
-                    counts[cube] = count_active_neightbours(active_cubes, cube)
+                    if cube not in counts.keys():
+                        counts[cube] = count_active_neighbours(active_cubes, cube)
     return counts
 
 
-def cycle(active_cubes: set[tuple[int, int, int]]) -> set[tuple[int, int, int]]:
+def cycle(active_cubes):
     new_active_cubes = set()
+    counts = {}
 
     for active_cube in active_cubes:
-        counts = count_me_and_active_neightbours(active_cubes, active_cube)
-        for cube in counts:
-            if cube in active_cubes:
-                if 2 <= counts[cube] <= 3:
-                    new_active_cubes.add(cube)
-            else:
-                if counts[cube] == 3:
-                    new_active_cubes.add(cube)
+        count_me_and_active_neightbours(counts, active_cubes, active_cube)
 
+    for cube in counts:
+        if cube in active_cubes:
+            if 2 <= counts[cube] <= 3:
+                new_active_cubes.add(cube)
+        else:
+            if counts[cube] == 3:
+                new_active_cubes.add(cube)
     return new_active_cubes
 
 
