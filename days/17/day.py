@@ -19,29 +19,31 @@ def main(input):
 
 
 def count_active_neightbours(active_cubes: set[tuple[int, int, int]], active_cube: tuple[int, int, int]) -> int:
-    (x, y, z) = active_cube
+    (x, y, z, w) = active_cube
     n_neighbours = 0
-    for dz in range(-1, 2):
-        for dy in range(-1, 2):
-            for dx in range(-1, 2):
-                if 0 == dx == dy == dz:
-                    continue
+    for dw in range(-1, 2):
+        for dz in range(-1, 2):
+            for dy in range(-1, 2):
+                for dx in range(-1, 2):
+                    if 0 == dx == dy == dz == dw:
+                        continue
 
-                neightbour = (x + dx, y + dy, z + dz)
-                if neightbour in active_cubes:
-                    n_neighbours += 1
+                    neightbour = (x + dx, y + dy, z + dz, w + dw)
+                    if neightbour in active_cubes:
+                        n_neighbours += 1
 
     return n_neighbours
 
 
 def count_me_and_active_neightbours(active_cubes, me):
     counts = {}
-    (x, y, z) = me
-    for dz in range(-1, 2):
-        for dy in range(-1, 2):
-            for dx in range(-1, 2):
-                cube = (x + dx, y + dy, z + dz)
-                counts[cube] = count_active_neightbours(active_cubes, cube)
+    (x, y, z, w) = me
+    for dw in range(-1, 2):
+        for dz in range(-1, 2):
+            for dy in range(-1, 2):
+                for dx in range(-1, 2):
+                    cube = (x + dx, y + dy, z + dz, w + dw)
+                    counts[cube] = count_active_neightbours(active_cubes, cube)
     return counts
 
 
@@ -52,7 +54,7 @@ def cycle(active_cubes: set[tuple[int, int, int]]) -> set[tuple[int, int, int]]:
         counts = count_me_and_active_neightbours(active_cubes, active_cube)
         for cube in counts:
             if cube in active_cubes:
-                if 2 <= counts[cube] <=3:
+                if 2 <= counts[cube] <= 3:
                     new_active_cubes.add(cube)
             else:
                 if counts[cube] == 3:
@@ -61,21 +63,17 @@ def cycle(active_cubes: set[tuple[int, int, int]]) -> set[tuple[int, int, int]]:
     return new_active_cubes
 
 
-
-
 def part1(input: str) -> int:
+    return -1
+
+
+def part2(input: str) -> int:
     active_cubes = get_input(input)
 
     for i in range(6):
         active_cubes = cycle(active_cubes)
 
     return len(active_cubes)
-
-
-def part2(input: str) -> int:
-    inputs = get_input(input)
-
-    return len(inputs) * 2
 
 
 def get_input(input: str):
@@ -85,7 +83,7 @@ def get_input(input: str):
     for y in range(len(lines)):
         for x in range(len(lines[y])):
             if lines[y][x] == '#':
-                active_cells.add((x, y, 0))
+                active_cells.add((x, y, 0, 0))
     return active_cells
 
 

@@ -9,7 +9,7 @@ class Test(TestCase):
         self.assertEqual(1, part1(puzzle.input))
 
     def test_part2(self):
-        self.assertEqual(2, part2(puzzle.input))
+        self.assertEqual(2696, part2(puzzle.input))
 
 
 if __name__ == '__main__':
