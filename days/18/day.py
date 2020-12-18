@@ -20,13 +20,12 @@ def main(input):
 
 def part1(input: str) -> int:
     expressions = input.split('\n')
-    return sum([evaluate(parse(exp)) for exp in expressions])
+    return sum([evaluate(parse(exp, False)) for exp in expressions])
 
 
 def part2(input: str) -> int:
-    inputs = get_input(input)
-
-    return len(inputs) * 2
+    expressions = input.split('\n')
+    return sum([evaluate(parse(exp, True)) for exp in expressions])
 
 
 def evaluate(expr: list) -> int:
@@ -50,25 +49,53 @@ def evaluate(expr: list) -> int:
     raise Exception('bad expression:', expr)
 
 
-def parse(string: str):
+def parse(string: str, plus_precedence: bool):
     pattern = re.compile(r'([\d+\+*\(\)])')
     symbols = []
     for part in pattern.findall(string):
-        try:
+        if part.isdigit():
             n = int(part)
             symbols.append(n)
-        except:
+        else:
             symbols.append(part)
-    return to_tree(symbols)
+
+    tree = parenthesis(symbols)
+
+    if plus_precedence:
+        tree = pluses(tree)
+
+    return tree
 
 
-def to_tree(symbols: list):
+def pluses(symbols: list):
+    if isinstance(symbols, int):
+        return symbols
+    if len(symbols) == 1:
+        return symbols[0]
+
+    res = []
+    i = 0
+    while i < len(symbols):
+        if i < len(symbols) - 1 and symbols[i + 1] == '+':
+            res.append([pluses(symbols[i]), '+', pluses(symbols[i + 2])])
+            i += 3
+        elif symbols[i] == '+':
+            res[len(res) - 1] = [res[len(res) - 1], '+', pluses(symbols[i + 1])]
+            i += 2
+        else:
+            res.append(pluses(symbols[i]))
+            i += 1
+
+    return res
+
+
+def parenthesis(symbols: list):
     res = []
     i = 0
     while i < len(symbols):
         if symbols[i] == '(':
             closing_i = i + find_closing(symbols[i + 1:])
-            subexp = to_tree(symbols[i + 1:closing_i])
+            subexp = parenthesis(symbols[i + 1:closing_i])
             res.append(subexp)
             i = closing_i + 1
         else:
