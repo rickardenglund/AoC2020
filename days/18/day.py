@@ -20,12 +20,18 @@ def main(input):
 
 def part1(input: str) -> int:
     expressions = input.split('\n')
-    return sum([evaluate(parse(exp, False)) for exp in expressions])
+    return sum(
+        [evaluate(parse(exp, False))
+         for exp in expressions]
+    )
 
 
 def part2(input: str) -> int:
     expressions = input.split('\n')
-    return sum([evaluate(parse(exp, True)) for exp in expressions])
+    return sum(
+        [evaluate(parse(exp, True))
+         for exp in expressions]
+    )
 
 
 def evaluate(expr: list) -> int:
@@ -45,11 +51,10 @@ def evaluate(expr: list) -> int:
         )
     if expr[0] == '(' or expr[0] == ')':
         raise Exception('found paren', expr)
-
     raise Exception('bad expression:', expr)
 
 
-def parse(string: str, plus_precedence: bool):
+def parse(string: str, plus_precedence_enabled: bool):
     pattern = re.compile(r'([\d+\+*\(\)])')
     symbols = []
     for part in pattern.findall(string):
@@ -59,15 +64,15 @@ def parse(string: str, plus_precedence: bool):
         else:
             symbols.append(part)
 
-    tree = parenthesis(symbols)
+    tree = parenthesis_precedence(symbols)
 
-    if plus_precedence:
-        tree = pluses(tree)
+    if plus_precedence_enabled:
+        tree = plus_precedence(tree)
 
     return tree
 
 
-def pluses(symbols: list):
+def plus_precedence(symbols: list):
     if isinstance(symbols, int):
         return symbols
     if len(symbols) == 1:
@@ -77,25 +82,25 @@ def pluses(symbols: list):
     i = 0
     while i < len(symbols):
         if i < len(symbols) - 1 and symbols[i + 1] == '+':
-            res.append([pluses(symbols[i]), '+', pluses(symbols[i + 2])])
+            res.append([plus_precedence(symbols[i]), '+', plus_precedence(symbols[i + 2])])
             i += 3
         elif symbols[i] == '+':
-            res[len(res) - 1] = [res[len(res) - 1], '+', pluses(symbols[i + 1])]
+            res[len(res) - 1] = [res[len(res) - 1], '+', plus_precedence(symbols[i + 1])]
             i += 2
         else:
-            res.append(pluses(symbols[i]))
+            res.append(plus_precedence(symbols[i]))
             i += 1
 
     return res
 
 
-def parenthesis(symbols: list):
+def parenthesis_precedence(symbols: list):
     res = []
     i = 0
     while i < len(symbols):
         if symbols[i] == '(':
             closing_i = i + find_closing(symbols[i + 1:])
-            subexp = parenthesis(symbols[i + 1:closing_i])
+            subexp = parenthesis_precedence(symbols[i + 1:closing_i])
             res.append(subexp)
             i = closing_i + 1
         else:
