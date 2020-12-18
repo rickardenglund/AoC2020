@@ -6,7 +6,7 @@ gen_day:
 	@install -d days/${DAY}
 	@rm -rf days/${DAY}/*
 	@cp -r days/template/* days/${DAY}/
-	@sed -i "s/day XX/day ${DAY}/g" days/${DAY}/day.py
+	@sed -i '' "s/day XX/day ${DAY}/g" days/${DAY}/day.py
 	@python util/get_puzzle.py ${DAY} days/${DAY}/puzzle.py
 	@git add days/${days}
 
