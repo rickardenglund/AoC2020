@@ -1,6 +1,6 @@
 from unittest import TestCase
 import unittest
-from day import part1, part2, matches, get_input
+from day_attempt1 import part1, part2, starts_with, get_input
 import puzzle
 
 
@@ -17,8 +17,8 @@ class Test(TestCase):
     def test_test_part1_simple(self):
         self.assertEqual(1, part1(puzzle.test_simple))
 
-    def test_part2(self):
-        self.assertEqual(2, part2(puzzle.input))
+    # def test_part2(self):
+    #     self.assertEqual(-1, part2(puzzle.input))
 
     def test_starts_with_simple(self):
         rules, messages = get_input(puzzle.test_simple)
@@ -50,6 +50,9 @@ class Test(TestCase):
 
     def test_test_part1_input_2(self):
         self.assertEqual(3, part1(puzzle.test_input_2))
+
+    def test_test_part2_simpel(self):
+        self.assertEqual(3, part1(puzzle.test_2_simpel))
 
     def test_test_part2_input(self):
         self.assertEqual(12, part2(puzzle.test_input_2))

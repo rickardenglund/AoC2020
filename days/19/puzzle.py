@@ -543,3 +543,14 @@ test_simple = '''0: 1 2 1
 aba
 baa
 abb'''
+
+test_2_simpel = '''0: 1 8 1
+1: "a"
+8: 3 | 3 2
+42: "b'
+
+aba
+abba
+abbba
+bab
+abab'''

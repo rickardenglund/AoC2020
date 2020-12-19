@@ -18,54 +18,13 @@ def main(input):
     print(f'p1 took: {stop1 - start1}\np2 took: {stop2 - start2}')
 
 
-def pre_calc(rules: dict[int, list[list]]):
-    lookup = {}
-    for n in range(len(rules)):
-        for rule_key in rules:
-            if is_complete(rules[rule_key]):
-                lookup[rule_key] = merge1(rules[rule_key])
-            else:
-                for r_i in range(len(rules[rule_key])):
-                    rule = rules[rule_key][r_i]
-                    for p_i in range(len(rule)):
-                        p = rule[p_i]
-                        if p in lookup:
-                            rules[rule_key] = merge(rules[rule_key][r_i], p_i, lookup[p])
-    return lookup
-
-
-def merge(rule, to_replace_index, replace_withs):
-    before = rule[:to_replace_index]
-    after = rule[to_replace_index + 1:]
-
-    new = []
-    for replace_with in replace_withs:
-        new.append(before + [replace_with] + after)
-
-    return new
-
-def merge1(rules):
-    new = []
-    for rule in rules:
-        new.append(''.join(rule))
-
-    return new
-
-def is_complete(rules: list[list]) -> bool:
-    for rule in rules:
-        for p in rule:
-            if isinstance(p, int):
-                return False
-    return True
-
-
 def part1(input: str) -> int:
     rules, messages = get_input(input)
-    lookup = pre_calc(rules)
 
     n_valid = 0
     for m in messages:
-        if matches(lookup, 0, m):
+        match, matches = starts_with(rules, 0, m)
+        if matches and match == m:
             print('match', m)
             n_valid += 1
 
@@ -75,21 +34,56 @@ def part1(input: str) -> int:
 def part2(input: str) -> int:
     rules, messages = get_input(input)
 
-    rules[8] = [[42], [42, 8]]
-    rules[11] = [[42, 31], [42, 11, 31]]
+    # rules[8] = [[42], [42, 8]]
+    # rules[11] = [[42, 31], [42, 11, 31]]
 
     n_valid = 0
     for m in messages:
-        if matches(rules, ):
+        match, matches = starts_with(rules, 0, m)
+        if matches and match == m:
             n_valid += 1
 
     return n_valid
 
 
-def matches(rules, rule_id, message: str) -> (str, bool):
-    if message in rules[rule_id]:
-        return True
-    return False
+def starts_with(rules, rule_id, message: str) -> (str, bool):
+    rule = rules[rule_id]
+
+    if len(message) == 0:
+        return '', False
+
+    # if rule_id == 8:
+    #     match = ''
+    #     match_list = []
+    #     submatch, matches = starts_with(rules, 42, message)
+    #     if not matches:
+    #         return '', False
+    #     else:
+    #         match += submatch
+    #         match_list.append(match)
+    #     while matches:
+    #         submatch, matches = starts_with(rules, 42, message[len(match):])
+    #         if matches:
+    #             match += submatch
+    #             match_list.append(match)
+    #     return match_list, True
+
+    if isinstance(rule, str):
+        return message[0], message[0] == rule
+
+    for r in rule:
+        match = ''
+        matching_rules = 0
+        for r_i in range(len(r)):
+            submatch, matches = starts_with(rules, r[r_i], message[len(match):])
+            if not matches:
+                break
+
+            match += submatch
+            matching_rules += 1
+        if matching_rules == len(r) and message.startswith(match):
+            return match, True
+    return '', False
 
 
 def get_input(input: str):
