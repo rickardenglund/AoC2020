@@ -31,8 +31,26 @@ def part1(input: str) -> int:
     return n_valid
 
 
+def part2(input: str) -> int:
+    rules, messages = get_input(input)
+
+    rules[8] = [[42], [42, 8]]
+    rules[11] = [[42, 31], [42, 11, 31]]
+
+    n_valid = 0
+    for m in messages:
+        match, matches = starts_with(rules, 0, m)
+        if matches and match == m:
+            n_valid += 1
+
+    return n_valid
+
+
 def starts_with(rules, rule_id, message: str) -> (str, bool):
     rule = rules[rule_id]
+
+    if len(message) == 0:
+        return '', False
 
     if isinstance(rule, str):
         return message[0], message[0] == rule
@@ -49,12 +67,6 @@ def starts_with(rules, rule_id, message: str) -> (str, bool):
         if matching_rules == len(r) and message.startswith(match):
             return match, True
     return '', False
-
-
-def part2(input: str) -> int:
-    inputs = get_input(input)
-
-    return len(inputs) * 2
 
 
 def get_input(input: str):

@@ -6,10 +6,10 @@ import puzzle
 
 class Test(TestCase):
     def test_part1(self):
-        self.assertEqual(-1, part1(puzzle.input))
+        self.assertEqual(113, part1(puzzle.input))
 
     def test_test_part1(self):
-        self.assertEqual(113, part1(puzzle.test_input))
+        self.assertEqual(2, part1(puzzle.test_input))
 
     def test_test_part1_small(self):
         self.assertEqual(2, part1(puzzle.test_small))
@@ -37,7 +37,7 @@ class Test(TestCase):
         self.assertFalse(match)
         self.assertEqual(s, '')
 
-    def test_starts_with_simple(self):
+    def test_starts_with_small(self):
         rules, messages = get_input(puzzle.test_small)
 
         s, match = starts_with(rules, 0, 'aba')
@@ -47,6 +47,12 @@ class Test(TestCase):
         s, match = starts_with(rules, 0, 'aab')
         self.assertTrue(match)
         self.assertEqual(s, 'aab')
+
+    def test_test_part1_input_2(self):
+        self.assertEqual(3, part1(puzzle.test_input_2))
+
+    def test_test_part2_input(self):
+        self.assertEqual(12, part2(puzzle.test_input_2))
 
 
 if __name__ == '__main__':
