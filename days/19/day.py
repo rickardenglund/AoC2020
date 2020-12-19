@@ -23,36 +23,32 @@ def part1(input: str) -> int:
 
     n_valid = 0
     for m in messages:
-        match_len = is_valid(rules, 0, m)
-        print(m, match_len)
-        if match_len == len(m):
+        match, matches = starts_with(rules, 0, m)
+        if matches and match == m:
             print('match', m)
             n_valid += 1
 
     return n_valid
 
 
-def is_valid(rules, rule_id, message) -> int:
+def starts_with(rules, rule_id, message: str) -> (str, bool):
     rule = rules[rule_id]
 
-    while True:
-        if isinstance(rule, str):
-            if message[0] == rule:
-                return 1
-            else:
-                return 0
+    if isinstance(rule, str):
+        return message[0], message[0] == rule
 
-        for r in rule:
-            i = 0
-            for r_i in range(len(r)):
-                delta = is_valid(rules, r[r_i], message[i:])
-                if delta == 0:
-                    break
-                i += delta
-
-            if i == len(message):
-                return i
-        return 0
+    for r in rule:
+        match = ''
+        matching_rules = 0
+        for r_i in range(len(r)):
+            submatch, matches = starts_with(rules, r[r_i], message[len(match):])
+            if not matches:
+                break
+            match += submatch
+            matching_rules += 1
+        if matching_rules == len(r) and message.startswith(match):
+            return match, True
+    return '', False
 
 
 def part2(input: str) -> int:
