@@ -27,14 +27,14 @@ def part1(input: str) -> int:
     for allergen in possible_allergen:
         ingredients_to_avoid = ingredients_to_avoid.union(possible_allergen[allergen])
 
-    count = 0
+    occurrences = 0
     for food in foods:
         ingredients, _ = food
         for ingredient in ingredients:
             if ingredient not in ingredients_to_avoid:
-                count += 1
+                occurrences += 1
 
-    return count
+    return occurrences
 
 
 def get_possible_allergens(foods):
@@ -51,11 +51,6 @@ def get_possible_allergens(foods):
     return possible_allergen
 
 
-def remove_ingredient(possible_allergens, allergen_name: str):
-    for allergen in possible_allergens:
-        possible_allergens[allergen] = possible_allergens[allergen].difference([allergen_name])
-
-
 def part2(input: str) -> str:
     foods = get_input(input)
 
@@ -70,10 +65,13 @@ def part2(input: str) -> str:
                 remove_ingredient(possible_allergens, allergen_name)
 
     solved.sort(key=lambda x: x[0])
-    res = []
-    for ingredient in solved:
-        res.append(ingredient[1])
+    res = map(lambda x: x[1], solved)
     return ','.join(res)
+
+
+def remove_ingredient(possible_allergens, allergen_name: str):
+    for allergen in possible_allergens:
+        possible_allergens[allergen] = possible_allergens[allergen].difference([allergen_name])
 
 
 def get_input(input: str):
