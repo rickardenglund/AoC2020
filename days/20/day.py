@@ -1,7 +1,6 @@
 import re
 from functools import reduce
 
-
 import puzzle
 from datetime import datetime
 import numpy as np
@@ -24,10 +23,15 @@ def main(input):
 
 def part1(input: str) -> int:
     pieces = get_input(input)
+    possible_neighbours = get_neighbours(pieces)
+    corner_pieces = [key for key in possible_neighbours if len(possible_neighbours[key]) == 2]
+    return reduce(lambda a, b: a * b, corner_pieces, 1)
+
+
+def get_neighbours(pieces):
     possible_neighbours: dict[int, set[int]] = {}
     for key in pieces:
         possible_neighbours[key] = set()
-
     for key in pieces:
         for other_key in pieces:
             if key == other_key:
@@ -36,12 +40,7 @@ def part1(input: str) -> int:
             if fits(pieces[key], pieces[other_key]):
                 possible_neighbours[key].add(other_key)
                 possible_neighbours[other_key].add(key)
-    count = 0
-    for key in pieces:
-        if len(pieces[key]) == 2:
-            count += 1
-    corner_pieces = [key for key in possible_neighbours if len(possible_neighbours[key]) == 2]
-    return reduce(lambda a,b:a*b, corner_pieces, 1)
+    return possible_neighbours
 
 
 def fits(p1: np.ndarray, p2: np.ndarray) -> bool:
@@ -74,10 +73,114 @@ def fits(p1: np.ndarray, p2: np.ndarray) -> bool:
     return False
 
 
-def part2(input: str) -> int:
-    inputs = get_input(input)
+SEA_MONSTER = '''                  # 
+#    ##    ##    ###
+ #  #  #  #  #  #   '''
 
-    return len(inputs) * 2
+
+class Piece():
+    def __init__(self, id, arr):
+        self.id = id
+        self.arr = arr
+
+
+class Image():
+    def __init__(self, first_corner: Piece):
+        self.parts = {first_corner.id: first_corner}
+
+    # def insert(self, image, next_to):
+
+
+def part2(input: str) -> int:
+    pieces = get_input(input)
+    possible_neighbours = get_neighbours(pieces)
+    corner_pieces = [key for key in possible_neighbours if len(possible_neighbours[key]) == 2]
+
+    first_corner = corner_pieces[0]
+    to_visit = {first_corner}
+    visited = []
+    rott = get_neighbours_rotated(pieces, first_corner, possible_neighbours[first_corner])
+    for n in rott:
+        print(n)
+
+    while len(to_visit) > 0:
+        piece = to_visit.pop()
+        for neighbour in possible_neighbours[piece]:
+            if neighbour not in visited:
+                to_visit.add(neighbour)
+        print('visited', piece)
+        visited.append(piece)
+
+    return len(visited)
+
+
+def get_neighbours_rotated(pieces, current_key, neighbours):
+    current = pieces[current_key]
+    current_sides = [
+        current[0],
+        current[:, current.shape[1] - 1],
+        current[current.shape[0] - 1][::-1],
+        current[:, 0][::-1]
+    ]
+
+    res = [None] * 4
+    for side_index in range(len(current_sides)):
+        for neighbour_key in neighbours:
+            rotated = rotate(pieces[neighbour_key], current_sides[side_index], side_index)
+            if rotated:
+                res[side_index] = rotated
+    return res
+
+
+def rotate(neighbour, side_to_match, target_side):
+    neighbour_sides = [
+        neighbour[0],
+        neighbour[:, neighbour.shape[1] - 1],
+        neighbour[neighbour.shape[0] - 1][::-1],
+        neighbour[:, 0][::-1]
+    ]
+
+    if target_side == 0:
+        if all(side_to_match == neighbour_sides[0]):
+            return np.rot90(np.rot90(neighbour))
+        elif all(side_to_match == neighbour_sides[1]):
+            return np.rot90(neighbour)
+        elif all(side_to_match == neighbour_sides[2]):
+            return neighbour
+        elif all(side_to_match == neighbour_sides[3]):
+            return np.rot90(np.rot90(np.rot90(neighbour)))
+        return None
+    elif target_side == 1:
+        if all(side_to_match == neighbour_sides[0]):
+            return np.rot90(np.rot90(np.rot90(neighbour)))
+        elif all(side_to_match == neighbour_sides[1]):
+            return np.rot90(np.rot90(neighbour))
+        elif all(side_to_match == neighbour_sides[2]):
+            return np.rot90(neighbour)
+        elif all(side_to_match == neighbour_sides[3]):
+            return neighbour
+        return None
+    elif target_side == 2:
+        if all(side_to_match == neighbour_sides[0]):
+            return neighbour
+        elif all(side_to_match == neighbour_sides[1]):
+            return np.rot90(np.rot90(np.rot90(neighbour)))
+        elif all(side_to_match == neighbour_sides[2]):
+            return np.rot90(np.rot90(neighbour))
+        elif all(side_to_match == neighbour_sides[3]):
+            return np.rot90(neighbour)
+        return None
+    elif target_side == 3:
+        if all(side_to_match == neighbour_sides[0]):
+            return np.rot90(np.rot90(np.rot90(neighbour)))
+        elif all(side_to_match == neighbour_sides[1]):
+            return np.rot90(np.rot90(neighbour))
+            return np.rot90(np.rot90(np.rot90(neighbour)))
+        elif all(side_to_match == neighbour_sides[2]):
+            return np.rot90(neighbour)
+        elif all(side_to_match == neighbour_sides[3]):
+            return neighbour
+        return None
 
 
 def get_input(input: str) -> dict[int, np.ndarray]:
