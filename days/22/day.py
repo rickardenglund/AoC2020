@@ -1,4 +1,3 @@
-import re
 import puzzle
 from datetime import datetime
 
@@ -37,10 +36,16 @@ def part1(input: str) -> int:
             raise Exception('duplicated card', c1)
 
     winner = p1 if p1 else p2
-    return get_score(winner)
+    return calc_score(winner)
 
 
-def get_score(winner):
+def part2(input: str) -> int:
+    decks = get_input(input)
+    winner, winner_hand = recursive_combat(1, tuple(decks[0]), tuple(decks[1]))
+    return calc_score(winner_hand)
+
+
+def calc_score(winner):
     score = 0
     multiplier = len(winner)
     for i in range(len(winner)):
@@ -49,25 +54,21 @@ def get_score(winner):
     return score
 
 
-def part2(input: str) -> int:
-    decks = get_input(input)
-    winner, winner_hand = recursive_combat(1, set(), set(), tuple(decks[0]), tuple(decks[1]))
-    return get_score(winner_hand)
+P1_NAME = 'p1'
+P2_NAME = 'p2'
 
 
-P1 = 'p1'
-P2 = 'p2'
-
-
-def recursive_combat(game: int, p1_played_hands: set[tuple[int]],
-                     p2_played_hands: set[tuple[int]],
+def recursive_combat(game: int,
                      p1: tuple[int],
                      p2: tuple[int]) -> (str, tuple[int]):
     round = 0
+    p1_played_hands = set()
+    p2_played_hands = set()
+
     while p1 and p2:
         round += 1
         if p1 in p1_played_hands or p2 in p2_played_hands:
-            return P1, p1
+            return P1_NAME, p1
 
         p1_played_hands.add(p1)
         p2_played_hands.add(p2)
@@ -77,13 +78,11 @@ def recursive_combat(game: int, p1_played_hands: set[tuple[int]],
         c2 = p2[0]
         p2_next_hand = p2[1:]
         if c1 <= len(p1_next_hand) and c2 <= len(p2_next_hand):
-            # winner, winner_hand = recursive_combat(game + 1, p1_played_hands, p2_played_hands, p1_next_hand[:c1],
-            #                                        p2_next_hand[:c2])
-            winner, winner_hand = recursive_combat(game + 1, set(), set(), p1_next_hand[:c1], p2_next_hand[:c2])
-            if winner == P1:
+            winner, _ = recursive_combat(game + 1, p1_next_hand[:c1], p2_next_hand[:c2])
+            if winner == P1_NAME:
                 p1 = p1_next_hand + (c1, c2)
                 p2 = p2_next_hand
-            elif winner == P2:
+            elif winner == P2_NAME:
                 p2 = p2_next_hand + (c2, c1)
                 p1 = p1_next_hand
             else:
@@ -98,7 +97,7 @@ def recursive_combat(game: int, p1_played_hands: set[tuple[int]],
             else:
                 raise Exception('duplicated card', c1)
 
-    return (P1, p1) if p1 else (P2, p2)
+    return (P1_NAME, p1) if p1 else (P2_NAME, p2)
 
 
 def get_input(input: str) -> list[list[int]]:
