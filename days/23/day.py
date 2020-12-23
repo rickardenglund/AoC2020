@@ -22,25 +22,7 @@ def part1(input: str) -> str:
     circle = Circle(numbers)
 
     for move in range(100):
-        current = circle.get(0)
-        c1 = circle.get(1)
-        c2 = circle.get(2)
-        c3 = circle.get(3)
-
-        destination = current.Value - 1
-        if destination < circle.min:
-            destination = circle.max
-
-        while destination in [c1.Value, c2.Value, c3.Value]:
-            destination -= 1
-            if destination < circle.min:
-                destination = circle.max
-
-        destination = circle.find(destination)
-        circle.remove_three()
-
-        circle.insert_after(destination, [c1, c2, c3])
-        circle.Head = circle.Head.Next
+        shuffle(circle)
 
     circle.Head = circle.find(1)
     return str(circle)[1:]
@@ -52,35 +34,31 @@ def part2(input: str) -> int:
     circle.extend(1_000_000)
 
     for move in range(10_000_000):
-        if move % 1_000_000 == 0:
-            print(move)
-        current = circle.get(0)
-        c1 = circle.get(1)
-        c2 = circle.get(2)
-        c3 = circle.get(3)
-
-        destination = current.Value - 1
-        if destination < circle.min:
-            destination = circle.max
-
-        while destination in [c1.Value, c2.Value, c3.Value]:
-            destination -= 1
-            if destination < circle.min:
-                destination = circle.max
-
-        destination = circle.find(destination)
-        circle.remove_three()
-
-        circle.insert_after(destination, [c1, c2, c3])
-        circle.Head = circle.Head.Next
+        shuffle(circle)
 
     circle.Head = circle.find(1)
     first_star = circle.get(1).Value
     seconds_start = circle.get(2).Value
 
-    print(first_star, seconds_start, first_star * seconds_start)
-
     return first_star * seconds_start
+
+
+def shuffle(circle):
+    current = circle.get(0)
+    c1 = circle.get(1)
+    c2 = circle.get(2)
+    c3 = circle.get(3)
+    destination = current.Value - 1
+    if destination < circle.min:
+        destination = circle.max
+    while destination in [c1.Value, c2.Value, c3.Value]:
+        destination -= 1
+        if destination < circle.min:
+            destination = circle.max
+    destination = circle.find(destination)
+    circle.remove_three()
+    circle.insert_after(destination, [c1, c2, c3])
+    circle.Head = circle.Head.Next
 
 
 class Circle():
@@ -132,14 +110,6 @@ class Circle():
 
     def find(self, value):
         return self.value_index[value]
-        # if self.Head.Value == value:
-        #     return self.Head
-        #
-        # cur = self.Head.Next
-        # while cur != self.Head:
-        #     if cur.Value == value:
-        #         return cur
-        #     cur = cur.Next
 
     def remove_three(self):
         self.Head.Next = self.Head.Next.Next.Next.Next
