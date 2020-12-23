@@ -18,7 +18,8 @@ def main(input):
 
 
 def part1(input: str) -> str:
-    circle = get_input(input)
+    numbers = get_input(input)
+    circle = Circle(numbers)
 
     for move in range(100):
         current = circle.get(0)
@@ -36,8 +37,6 @@ def part1(input: str) -> str:
                 destination = circle.max
 
         destination = circle.find(destination)
-        # print(
-        #     f'-- move {move} \n cups {str(circle)} \n pick up: {[c1.Value, c2.Value, c3.Value]} \n destination: {destination}\n\n')
         circle.remove_three()
 
         circle.insert_after(destination, [c1, c2, c3])
@@ -48,11 +47,13 @@ def part1(input: str) -> str:
 
 
 def part2(input: str) -> int:
-    circle = get_input(input)
+    numbers = get_input(input)
+    circle = Circle(numbers)
     circle.extend(1_000_000)
 
     for move in range(10_000_000):
-        print(move)
+        if move % 1_000_000 == 0:
+            print(move)
         current = circle.get(0)
         c1 = circle.get(1)
         c2 = circle.get(2)
@@ -73,20 +74,29 @@ def part2(input: str) -> int:
         circle.insert_after(destination, [c1, c2, c3])
         circle.Head = circle.Head.Next
 
-    return -1
+    circle.Head = circle.find(1)
+    first_star = circle.get(1).Value
+    seconds_start = circle.get(2).Value
+
+    print(first_star, seconds_start, first_star * seconds_start)
+
+    return first_star * seconds_start
 
 
 class Circle():
     def __init__(self, cups: list[int]):
         self.min = min(cups)
         self.max = max(cups)
+        self.Head = 0
 
         self.Head = Cup(cups[0])
+        self.value_index = {cups[0]: self.Head}
 
         cur = self.Head
         new = cur
         for i in range(1, len(cups)):
             new = Cup(cups[i])
+            self.value_index[cups[i]] = new
             cur.Next = new
             cur = new
 
@@ -97,13 +107,13 @@ class Circle():
         while cur.Next != self.Head:
             cur = cur.Next
 
-        for i in range(self.max + 1, target +1):
+        for i in range(self.max + 1, target + 1):
             cur.Next = Cup(i)
+            self.value_index[i] = cur.Next
             cur = cur.Next
 
         cur.Next = self.Head
-
-
+        self.max = target
 
     def __str__(self):
         res = str(self.Head.Value)
@@ -121,14 +131,15 @@ class Circle():
         return cur
 
     def find(self, value):
-        if self.Head.Value == value:
-            return self.Head
-
-        cur = self.Head.Next
-        while cur != self.Head:
-            if cur.Value == value:
-                return cur
-            cur = cur.Next
+        return self.value_index[value]
+        # if self.Head.Value == value:
+        #     return self.Head
+        #
+        # cur = self.Head.Next
+        # while cur != self.Head:
+        #     if cur.Value == value:
+        #         return cur
+        #     cur = cur.Next
 
     def remove_three(self):
         self.Head.Next = self.Head.Next.Next.Next.Next
@@ -152,7 +163,7 @@ class Cup():
 
 
 def get_input(input: str):
-    return Circle(list(map(lambda x: int(x), list(input))))
+    return list(map(lambda x: int(x), list(input)))
 
 
 if __name__ == "__main__":
