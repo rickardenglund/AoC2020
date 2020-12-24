@@ -63,15 +63,15 @@ def next_day(old_blacks: set):
             (x, y, z) = neighbour
             neighbours_to_visit.add((x + ox, y + oy, z + oz))
 
-        update_tile(neighbour, new_blacks, old_blacks)
+        set_new_tile(neighbour, new_blacks, old_blacks)
 
     for neighbour in neighbours_to_visit:
-        update_tile(neighbour, new_blacks, old_blacks)
+        set_new_tile(neighbour, new_blacks, old_blacks)
 
     return new_blacks
 
 
-def update_tile(c, new_blacks, old_blacks):
+def set_new_tile(c, new_blacks, old_blacks):
     count = count_neighbours(old_blacks, c)
     if c in old_blacks:  # is black
         if not (count[BLACK] == 0 or count[BLACK] > 2):
