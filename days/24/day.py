@@ -52,37 +52,38 @@ def setup_floor(instructions):
     return blacks
 
 
+NEIGHBOUR_OFFSETS = [(1, 0, -1), (-1, 0, 1), (0, 1, -1), (0, -1, 1), (1, -1, 0), (-1, 1, 0)]
+
+
 def next_day(old_blacks: set):
     new_blacks = set()
     neighbours_to_visit = set()
-    for c in old_blacks:
-        for (ox, oy, oz) in [(1, 0, -1), (-1, 0, 1), (0, 1, -1), (0, -1, 1), (1, -1, 0), (-1, 1, 0)]:
-            (x, y, z) = c
+    for neighbour in old_blacks:
+        for (ox, oy, oz) in NEIGHBOUR_OFFSETS:
+            (x, y, z) = neighbour
             neighbours_to_visit.add((x + ox, y + oy, z + oz))
 
-        count = count_neighbours(old_blacks, c)
-        if c in old_blacks:  # is black
-            if not (count[BLACK] == 0 or count[BLACK] > 2):
-                new_blacks.add(c)
-        else:  # is white
-            if count[BLACK] == 2:
-                new_blacks.add(c)
+        update_tile(neighbour, new_blacks, old_blacks)
 
-    for c in neighbours_to_visit:
-        count = count_neighbours(old_blacks, c)
-        if c in old_blacks:  # is black
-            if not (count[BLACK] == 0 or count[BLACK] > 2):
-                new_blacks.add(c)
-        else:  # is white
-            if count[BLACK] == 2:
-                new_blacks.add(c)
+    for neighbour in neighbours_to_visit:
+        update_tile(neighbour, new_blacks, old_blacks)
 
     return new_blacks
 
 
+def update_tile(c, new_blacks, old_blacks):
+    count = count_neighbours(old_blacks, c)
+    if c in old_blacks:  # is black
+        if not (count[BLACK] == 0 or count[BLACK] > 2):
+            new_blacks.add(c)
+    else:  # is white
+        if count[BLACK] == 2:
+            new_blacks.add(c)
+
+
 def count_neighbours(blacks, pos):
     counts = {BLACK: 0, WHITE: 0}
-    for (ox, oy, oz) in [(1, 0, -1), (-1, 0, 1), (0, 1, -1), (0, -1, 1), (1, -1, 0), (-1, 1, 0)]:
+    for (ox, oy, oz) in NEIGHBOUR_OFFSETS:
         (x, y, z) = pos
         if (x + ox, y + oy, z + oz) in blacks:
             counts[BLACK] += 1
